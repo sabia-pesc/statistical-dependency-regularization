@@ -1,0 +1,11 @@
+services:
+  db:
+    restart: always
+    image: mariadb
+    environment:
+      - MYSQL_USER=optuna
+      - MYSQL_PASSWORD=optuna
+      - MYSQL_DATABASE=optuna
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3306:3306"
