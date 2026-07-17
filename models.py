@@ -113,6 +113,7 @@ class SimpleMLP(Transformer):
         self.corr = self.corr.tolist()
 
     def _compile_model(self):
+        K.clear_session()
         self.model = Sequential()
         self.model.add(InputLayer(input_shape=self.input_shape))
         if self.corr is not None and self.corr != 'standard_l2':
@@ -219,6 +220,7 @@ class FairTransitionLossMLP(Transformer):
         self.history = None
 
     def _compile_model(self):
+        K.clear_session()
         self.model = Sequential()
         self.model.add(InputLayer(input_shape=self.input_shape))
         if self.corr is not None:
