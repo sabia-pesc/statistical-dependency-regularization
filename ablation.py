@@ -138,7 +138,7 @@ def _optimize_worker(study_name, n_trials_worker, dataset_reader, model_initiali
     study.optimize(objective, n_trials=n_trials_worker)
 
 
-def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha):
+def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha=None, fixed_lambda=None):
     dataset_expanded_train, dataset_train, dataset_val, dataset_test, unprivileged_groups, privileged_groups, sens_attr = dataset_reader()
 
     scaler = StandardScaler()
@@ -180,9 +180,9 @@ def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_nam
         study = optuna.load_study(study_name=study_name, storage=STORAGE)
 
         # eval on test set
-        model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=study.best_params, fitness_rule=fitness_rule)
+        model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=study.best_params, fitness_rule=fitness_rule, fixed_lambda=fixed_lambda)
     else:
-        model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, fitness_rule=fitness_rule)
+        model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, fitness_rule=fitness_rule, fixed_lambda=fixed_lambda)
 
     model = model.fit(dataset_expanded_train, verbose=False)
     best_result = eval(model, dataset_test, unprivileged_groups, privileged_groups, fitness_rule, study.best_params)
@@ -190,7 +190,10 @@ def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_nam
     best_result['tune_results_history'] = study.trials_dataframe().to_dict('records')
     if fitness_rule is not None:
         best_result['fitness_rule'] = fitness_rule_name
+    if alpha is not None:
         best_result['alpha'] = alpha
+    if fixed_lambda is not None:
+        best_result['fixed_lambda'] = fixed_lambda
     else:
         best_result['fitness_rule'] = 'No optimization'
 
@@ -210,11 +213,14 @@ def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_nam
     return best_result
 
 
-def ftl_mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+def ftl_mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None, fixed_lambda=None):
     hidden_sizes = [100, 100]
     corr_type = 'xi'
     if type(hyperparameters) is not dict:
-        l2 = hyperparameters.suggest_categorical('l2', [1e-2, 1e-3, 1e-4])
+        if fixed_lambda is not None:
+            l2 = fixed_lambda
+        else:
+            l2 = hyperparameters.suggest_categorical('l2', [1e-2, 1e-3, 1e-4])
         dropout = hyperparameters.suggest_float('dropout', 0.0, 0.2)
         privileged_demotion = hyperparameters.suggest_float('privileged_demotion', 0.0, 1.0)
         privileged_promotion = hyperparameters.suggest_float('privileged_promotion', 0.0, 1.0)
@@ -245,18 +251,105 @@ def ftl_mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups
                                       batch_size=64)
     return model
 
+def simple_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+    hidden_sizes = [100, 100]
+    corr_type = None
+    l2 = 0.0
+    if type(hyperparameters) is not dict:
+        dropout = hyperparameters.suggest_float('dropout', 0.0, 0.2)
+    else:
+        dropout = hyperparameters['dropout']
+    if hyperparameters is not None:
+
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                        hidden_sizes=hidden_sizes,
+                        dropout=dropout,
+                        batch_size=64,
+                        corr_type=corr_type,
+                        l2=l2)
+    else:
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                        hidden_sizes=[32],
+                        dropout=0.1,
+                        batch_size=64)
+    return model
+
+def ftl_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+    hidden_sizes = [100,100]
+    corr_type = None
+    l2 = 0.0
+    if type(hyperparameters) is not dict:
+        dropout = hyperparameters.suggest_float('dropout', 0.0, 0.2)
+        privileged_demotion = hyperparameters.suggest_float('privileged_demotion', 0.0, 1.0)
+        privileged_promotion = hyperparameters.suggest_float('privileged_promotion', 0.0, 1.0)
+        protected_demotion = hyperparameters.suggest_float('protected_demotion', 0.0, 1.0)
+        protected_promotion = hyperparameters.suggest_float('protected_promotion', 0.0, 1.0)
+    else:
+        dropout = hyperparameters['dropout']
+        privileged_demotion = hyperparameters['privileged_demotion']
+        privileged_promotion = hyperparameters['privileged_promotion']
+        protected_demotion = hyperparameters['protected_demotion']
+        protected_promotion = hyperparameters['protected_promotion']
+
+    if hyperparameters is not None:
+        model = FairTransitionLossMLP(sensitive_attr=sens_attr,
+                                      hidden_sizes=hidden_sizes,
+                                      dropout=dropout,
+                                      batch_size=64,
+                                      privileged_demotion=privileged_demotion,
+                                      privileged_promotion=privileged_promotion,
+                                      protected_demotion=protected_demotion,
+                                      protected_promotion=protected_promotion,
+                                      corr_type=corr_type, l2=l2)
+    else:
+        model = FairTransitionLossMLP(sensitive_attr=sens_attr,
+                                      hidden_sizes=[32],
+                                      dropout=0.1,
+                                      batch_size=64)
+    return model
+
+def mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None, fixed_lambda=None):
+    hidden_sizes = [100, 100]
+    corr_type = 'xi'
+    if type(hyperparameters) is not dict:
+        if fixed_lambda is not None:
+            l2 = fixed_lambda
+        else:
+            l2 = hyperparameters.suggest_categorical('l2', [1e-2, 1e-3, 1e-4])
+        dropout = hyperparameters.suggest_float('dropout', 0.0, 0.2)
+    else:
+        l2 = hyperparameters['l2']
+        dropout = hyperparameters['dropout']
+    if hyperparameters is not None:
+
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                          hidden_sizes=hidden_sizes,
+                          dropout=dropout,
+                          batch_size=64,
+                          corr_type=corr_type,
+                          l2=l2)
+    else:
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                          hidden_sizes=[32],
+                          dropout=0.1,
+                          batch_size=64)
+    return model
+
 datasets = [
-    #adult_dataset_reader,
+    adult_dataset_reader,
     bank_dataset_reader,
-    #compas_dataset_reader,
-    #german_dataset_reader
+    compas_dataset_reader,
+    german_dataset_reader
 ]
 
 methods = [
-    ftl_mlp_xi_reg_initializer
+    ftl_mlp_xi_reg_initializer,
+    mlp_xi_reg_initializer
+    #simple_mlp_initializer,
+    #ftl_mlp_initializer
 ]
 
-def main():
+def alpha_ablation():
     results = []
 
     for dataset_reader in datasets:
@@ -267,6 +360,32 @@ def main():
 
                         alpha_path_name = str(alpha).replace('.','')
                         fitness_rule_name = f'alpha_{alpha_path_name}_{performance_metric}_{fairness_metric}'
+                        fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, 0.5)
+
+                        result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha)
+                        print('Best metrics')
+                        print('Dataset:', dataset_reader.__name__)
+                        print('Method:', model_initializer.__name__)
+                        print('Fitness rule:', fitness_rule_name)
+
+                        describe_metrics(result)
+                        results.append(result)
+                        results_df = pd.DataFrame(results)
+                        results_df.to_csv('raw_results/results_%s.csv' % start_time)
+                        gc.collect()
+    
+
+def lambda_ablation():
+    results = []
+
+    for dataset_reader in datasets:
+        for model_initializer in methods:
+            for performance_metric in ['overall_acc', 'MCC']:
+                for fairness_metric in ['stat_par_diff', 'avg_odds_diff', 'eq_opp_diff']:
+                    for fixed_lambda in [1e-2, 1e-3, 1e-4]:
+
+                        lambda_path_name = str(fixed_lambda)
+                        fitness_rule_name = f'fixed_lambda_{lambda_path_name}_{performance_metric}_{fairness_metric}'
                         fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, alpha)
 
                         result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha)
@@ -280,6 +399,13 @@ def main():
                         results_df = pd.DataFrame(results)
                         results_df.to_csv('raw_results/results_%s.csv' % start_time)
                         gc.collect()
+
+
+
+    
+
+def main():
+
 
 
 if __name__ == '__main__':
