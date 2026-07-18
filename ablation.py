@@ -246,10 +246,10 @@ def ftl_mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups
     return model
 
 datasets = [
-    adult_dataset_reader,
+    #adult_dataset_reader,
     bank_dataset_reader,
-    compas_dataset_reader,
-    german_dataset_reader
+    #compas_dataset_reader,
+    #german_dataset_reader
 ]
 
 methods = [
@@ -263,9 +263,10 @@ def main():
         for model_initializer in methods:
             for performance_metric in ['overall_acc', 'MCC']:
                 for fairness_metric in ['stat_par_diff', 'avg_odds_diff', 'eq_opp_diff']:
-                    for alpha in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+                    for alpha in [0.2, 0.35, 0.5, 0.65, 0.8]:
 
-                        fitness_rule_name = f'{alpha} * {performance_metric} + (1 - {alpha}) * {fairness_metric}'
+                        alpha_path_name = str(alpha).replace('.','')
+                        fitness_rule_name = f'alpha_{alpha_path_name}_{performance_metric}_{fairness_metric}'
                         fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, alpha)
 
                         result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha)
