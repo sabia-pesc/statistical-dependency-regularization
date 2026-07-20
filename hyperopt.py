@@ -13,18 +13,25 @@ import tensorflow.compat.v1 as tf_old
 import numpy as np
 import gc
 import os
+import multiprocessing
+from pathlib import Path
 import optuna
 from util import mathew_correlation_coefficient, f1_score
 from optuna.pruners import HyperbandPruner
 from optuna.samplers import TPESampler
 
 N_TRIALS = 100
-DEFAULT_N_JOBS = 6
+DEFAULT_N_JOBS = 8
 SAMPLER = TPESampler
 PRUNER = HyperbandPruner
+PROJECT_ROOT = Path(__file__).parent.absolute()
 CONNECTION_STRING = os.environ.get('CONNECTION_STRING')
 if CONNECTION_STRING is None:
-    CONNECTION_STRING = 'mysql+pymysql://optuna:optuna@localhost:3306/optuna'
+    CONNECTION_STRING = f'sqlite:///{PROJECT_ROOT}/optuna_study.db'
+STORAGE = optuna.storages.RDBStorage(
+    url=CONNECTION_STRING,
+    engine_kwargs={'connect_args': {'timeout': 30}} if CONNECTION_STRING.startswith('sqlite') else {}
+)
 start_time = datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
 
 def get_n_jobs():
@@ -96,39 +103,67 @@ def eval(model, dataset, unprivileged_groups, privileged_groups, fitness_rule, h
     return metrics
 
 
-def tune_model(dataset_reader, model_initializer, fitness_rule):
-    tune_results_history = []
+def _optimize_worker(study_name, n_trials_worker, dataset_reader, model_initializer, fitness_rule):
+    """Runs in its own OS process: builds its own dataset copy and TF/Keras graph,
+    then reports n_trials_worker trials into the shared (SQLite-backed) Optuna study.
+    Exiting the process fully releases its TF/Keras memory before the next worker batch."""
     dataset_expanded_train, dataset_train, dataset_val, dataset_test, unprivileged_groups, privileged_groups, sens_attr = dataset_reader()
 
     scaler = StandardScaler()
     dataset_train.features = scaler.fit_transform(dataset_train.features)
     dataset_val.features = scaler.transform(dataset_val.features)
 
+    def objective(trial):
+        trial_model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=trial, fitness_rule=fitness_rule)
+        trial_model = trial_model.fit(dataset_train.copy(), verbose=False)
+        result = eval(trial_model, dataset_val.copy(), unprivileged_groups, privileged_groups, fitness_rule, trial)
+        return result['fitness']
+
+    study = optuna.load_study(study_name=study_name, storage=STORAGE,
+                               sampler=get_sampler(), pruner=get_pruner())
+    study.optimize(objective, n_trials=n_trials_worker)
+
+
+def tune_model(dataset_reader, model_initializer, fitness_rule):
+    dataset_expanded_train, dataset_train, dataset_val, dataset_test, unprivileged_groups, privileged_groups, sens_attr = dataset_reader()
+
     scaler = StandardScaler()
     dataset_expanded_train.features = scaler.fit_transform(dataset_expanded_train.features)
     dataset_test.features = scaler.transform(dataset_test.features)
 
-    def objective(trial):
-        # training
-        trial_model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=trial, fitness_rule=fitness_rule)
-        trial_model = trial_model.fit(dataset_train.copy(), verbose=False)
-        result = eval(trial_model, dataset_val.copy(), unprivileged_groups, privileged_groups, fitness_rule, trial)
-        tune_results_history.append(result)
-        return result['fitness']
-
     if fitness_rule is not None:
         # best solution
         now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        study_name = "{0}_{1}_{2}".format(fitness_rule.__name__, model_initializer.__name__, now)
 
         study = optuna.create_study(direction='maximize',
-                                    study_name="{0}_{1}_{2}".format(fitness_rule.__name__,model_initializer.__name__,now) ,
+                                    study_name=study_name,
                                     pruner=get_pruner(),
-                                    sampler=get_sampler())#,
-                                    #storage=CONNECTION_STRING)
+                                    sampler=get_sampler(),
+                                    storage=STORAGE)
 
         N_JOBS = get_n_jobs()
-        print(f"optimizing with {N_JOBS} jobs")
-        study.optimize(objective, n_trials=N_TRIALS, n_jobs=N_JOBS)
+        print(f"optimizing with {N_JOBS} worker processes")
+
+        trials_per_worker = [N_TRIALS // N_JOBS] * N_JOBS
+        for i in range(N_TRIALS % N_JOBS):
+            trials_per_worker[i] += 1
+
+        processes = []
+        for n_trials_worker in trials_per_worker:
+            if n_trials_worker == 0:
+                continue
+            p = multiprocessing.Process(
+                target=_optimize_worker,
+                args=(study_name, n_trials_worker, dataset_reader, model_initializer, fitness_rule)
+            )
+            p.start()
+            processes.append(p)
+
+        for p in processes:
+            p.join()
+
+        study = optuna.load_study(study_name=study_name, storage=STORAGE)
 
         # eval on test set
         model = model_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=study.best_params, fitness_rule=fitness_rule)
@@ -138,7 +173,7 @@ def tune_model(dataset_reader, model_initializer, fitness_rule):
     model = model.fit(dataset_expanded_train, verbose=False)
     best_result = eval(model, dataset_test, unprivileged_groups, privileged_groups, fitness_rule, study.best_params)
 
-    best_result['tune_results_history'] = tune_results_history
+    best_result['tune_results_history'] = study.trials_dataframe().to_dict('records')
     if fitness_rule is not None:
         best_result['fitness_rule'] = fitness_rule.__name__
     else:
@@ -692,21 +727,26 @@ methods = [
     hifi_initializer
 ]
 
-results = []
+def main():
+    results = []
 
-for dataset_reader in datasets:
-    for fitness_rule in rules:
-        for model_initializer in methods:
-            result = tune_model(dataset_reader, model_initializer, fitness_rule)
-            print('Best metrics')
-            print('Dataset:', dataset_reader.__name__)
-            print('Method:', model_initializer.__name__)
-            if fitness_rule is not None:
-                print('Fitness rule:', fitness_rule.__name__)
-            else:
-                print('Fitness rule: None')
-            describe_metrics(result)
-            results.append(result)
-            results_df = pd.DataFrame(results)
-            results_df.to_csv('raw_results/results_%s.csv' % start_time)
-            gc.collect()
+    for dataset_reader in datasets:
+        for fitness_rule in rules:
+            for model_initializer in methods:
+                result = tune_model(dataset_reader, model_initializer, fitness_rule)
+                print('Best metrics')
+                print('Dataset:', dataset_reader.__name__)
+                print('Method:', model_initializer.__name__)
+                if fitness_rule is not None:
+                    print('Fitness rule:', fitness_rule.__name__)
+                else:
+                    print('Fitness rule: None')
+                describe_metrics(result)
+                results.append(result)
+                results_df = pd.DataFrame(results)
+                results_df.to_csv('raw_results/results_%s.csv' % start_time)
+                gc.collect()
+
+
+if __name__ == '__main__':
+    main()
