@@ -3,7 +3,7 @@ from datetime import datetime
 from aif360.metrics import ClassificationMetric
 from aif360.algorithms.inprocessing import PrejudiceRemover, AdversarialDebiasing, MetaFairClassifier, GerryFairClassifier
 from models import (FairTransitionLossMLP, SimpleMLP, describe_metrics, AdaptativePriorityReweightingDP,
-                    AdaptativePriorityReweightingEOD, AdaptativePriorityReweightingEOP)
+                    AdaptativePriorityReweightingEOD, AdaptativePriorityReweightingEOP, HIFIClassifier)
 from fitness_rules import *
 from dataset_readers import *
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -617,6 +617,23 @@ def gerry_fair_classifier_initializer(sens_attr, unprivileged_groups, privileged
         model = GerryFairClassifier(fairness_def='FN')
     return model
 
+def hifi_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+    classifier_name = 'dl'
+    if type(hyperparameters) is not dict:
+        eta = hyperparameters.suggest_float('eta', 1e-3, 1000.0, log=True)
+    else:
+        eta = hyperparameters['eta']
+    if hyperparameters is not None:
+        model = HIFIClassifier(sensitive_attr=sens_attr,
+                               classifier_name=classifier_name,
+                               eta=eta,
+                               batch_size=64)
+    else:
+        model = HIFIClassifier(sensitive_attr=sens_attr,
+                               classifier_name=classifier_name,
+                               batch_size=64)
+    return model
+
 def adaptative_priority_reweighting_classifier_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
     AdaptativePriorityReweighting = None
     if fitness_rule is not None and fitness_rule.__name__ in ['mcc_parity', 'acc_parity']:
@@ -669,9 +686,10 @@ methods = [
     #mlp_auto_reg_initializer,
     #mlp_preg_initializer,
     #mlp_sreg_initializer
-    mlp_kreg_initializer,
-    mlp_standard_l2_initializer
+    #mlp_kreg_initializer,
+    #mlp_standard_l2_initializer
     #mlp_xi_reg_initializer
+    hifi_initializer
 ]
 
 results = []

@@ -2,8 +2,7 @@ import pandas as pd
 from datetime import datetime
 from aif360.metrics import ClassificationMetric
 from aif360.algorithms.inprocessing import PrejudiceRemover, AdversarialDebiasing, MetaFairClassifier, GerryFairClassifier
-from models import (FairTransitionLossMLP, SimpleMLP, describe_metrics, AdaptativePriorityReweightingDP,
-                    AdaptativePriorityReweightingEOD, AdaptativePriorityReweightingEOP)
+from models import (FairTransitionLossMLP, SimpleMLP, describe_metrics, HIFIClassifier)
 from fitness_rules import *
 from dataset_readers import *
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -190,12 +189,12 @@ def tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_nam
     best_result['tune_results_history'] = study.trials_dataframe().to_dict('records')
     if fitness_rule is not None:
         best_result['fitness_rule'] = fitness_rule_name
+    else:
+        best_result['fitness_rule'] = 'No optimization'
     if alpha is not None:
         best_result['alpha'] = alpha
     if fixed_lambda is not None:
         best_result['fixed_lambda'] = fixed_lambda
-    else:
-        best_result['fitness_rule'] = 'No optimization'
 
     print('-----------------------------------')
     describe_metrics(best_result)
@@ -335,18 +334,37 @@ def mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups, hy
                           batch_size=64)
     return model
 
+
+def hifi_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None, fixed_lambda=None):
+    classifier_name = 'dl'
+    if type(hyperparameters) is not dict:
+        eta = hyperparameters.suggest_float('eta', 1e-3, 1000.0, log=True)
+    else:
+        eta = hyperparameters['eta']
+    if hyperparameters is not None:
+        model = HIFIClassifier(sensitive_attr=sens_attr,
+                               classifier_name=classifier_name,
+                               eta=eta,
+                               batch_size=64)
+    else:
+        model = HIFIClassifier(sensitive_attr=sens_attr,
+                               classifier_name=classifier_name,
+                               batch_size=64)
+    return model
+
 datasets = [
     adult_dataset_reader,
-    bank_dataset_reader,
-    compas_dataset_reader,
-    german_dataset_reader
+    #bank_dataset_reader,
+    #compas_dataset_reader,
+    #erman_dataset_reader
 ]
 
 methods = [
-    ftl_mlp_xi_reg_initializer,
-    mlp_xi_reg_initializer
+    #ftl_mlp_xi_reg_initializer,
+    #mlp_xi_reg_initializer
     #simple_mlp_initializer,
-    #ftl_mlp_initializer
+    #ftl_mlp_initializer,
+    hifi_initializer
 ]
 
 def alpha_ablation():
@@ -360,9 +378,9 @@ def alpha_ablation():
 
                         alpha_path_name = str(alpha).replace('.','')
                         fitness_rule_name = f'alpha_{alpha_path_name}_{performance_metric}_{fairness_metric}'
-                        fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, 0.5)
+                        fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, alpha)
 
-                        result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha)
+                        result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha=alpha)
                         print('Best metrics')
                         print('Dataset:', dataset_reader.__name__)
                         print('Method:', model_initializer.__name__)
@@ -386,9 +404,9 @@ def lambda_ablation():
 
                         lambda_path_name = str(fixed_lambda)
                         fitness_rule_name = f'fixed_lambda_{lambda_path_name}_{performance_metric}_{fairness_metric}'
-                        fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, alpha)
+                        fitness_rule = WeightedFitnessRule(performance_metric, fairness_metric, 0.5)
 
-                        result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, alpha)
+                        result = tune_model(dataset_reader, model_initializer, fitness_rule, fitness_rule_name, fixed_lambda=fixed_lambda)
                         print('Best metrics')
                         print('Dataset:', dataset_reader.__name__)
                         print('Method:', model_initializer.__name__)
@@ -405,7 +423,8 @@ def lambda_ablation():
     
 
 def main():
-
+    alpha_ablation()
+    #lambda_ablation()
 
 
 if __name__ == '__main__':

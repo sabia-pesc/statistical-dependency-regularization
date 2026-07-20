@@ -13,7 +13,19 @@ from xicorrelation import xicorr
 
 import logging
 import os
+import sys
 from sklearn.linear_model import LogisticRegression
+
+import torch
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+from torch.optim.lr_scheduler import StepLR
+
+HIFI_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'HIFI-master')
+if HIFI_ROOT not in sys.path:
+    sys.path.append(HIFI_ROOT)
+from bias_mitigation_methods.hifi import custom_loss as hifi_custom_loss
+from tools.get_classifier import get_torch_classifier
 
 
 # tentar otimizar com outras métricas de performance
@@ -561,6 +573,95 @@ class AdaptativePriorityReweightingEOP(Transformer):
 
     def predict(self, X):
         return self.model.predict(X)
+
+# wrapper to HIFI (Harsanyi Interaction based Fairness Improvement)
+# https://github.com/... see HIFI-master/bias_mitigation_methods/hifi.py
+class HIFIClassifier(Transformer):
+
+    def __init__(self, sensitive_attr='', classifier_name='dl', eta=0.1,
+                 num_epochs=20, batch_size=64, learning_rate=0.002,
+                 scheduler_step_size=10, scheduler_gamma=0.5, tolerance=1e-4):
+        self.sensitive_attr = sensitive_attr
+        self.classifier_name = classifier_name
+        self.eta = eta
+        self.num_epochs = num_epochs
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
+        self.scheduler_step_size = scheduler_step_size
+        self.scheduler_gamma = scheduler_gamma
+        self.tolerance = tolerance
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.model = None
+        self.input_shape = None
+        self.classes_ = None
+        self.corr = None
+        self.history = None
+
+    def fit(self, dataset, verbose=False):
+        X = dataset.features
+        y = (dataset.labels == dataset.favorable_label).reshape(X.shape[0], 1).astype(np.float32)
+
+        indices_sensitive_attributes = [dataset.feature_names.index(self.sensitive_attr)]
+
+        if self.model is None:
+            self.input_shape = X.shape[1]
+            self.model = get_torch_classifier(self.classifier_name, self.input_shape)
+            self.model.to(self.device)
+            self.classes_ = np.array([dataset.unfavorable_label, dataset.favorable_label])
+
+        X_tensor = torch.from_numpy(X).float()
+        y_tensor = torch.from_numpy(y).float()
+        data_loader = DataLoader(TensorDataset(X_tensor, y_tensor),
+                                 batch_size=self.batch_size, shuffle=True)
+
+        if self.classifier_name == 'dl':
+            optimizer = optim.NAdam(self.model.parameters(), lr=self.learning_rate)
+        else:
+            optimizer = optim.NAdam(self.model.parameters(), lr=1)
+        scheduler = StepLR(optimizer, step_size=self.scheduler_step_size, gamma=self.scheduler_gamma)
+
+        previous_loss = float('inf')
+        for epoch in range(self.num_epochs):
+            self.model.train()
+            epoch_loss = 0
+            for inputs, labels in data_loader:
+                inputs, labels = inputs.to(self.device), labels.to(self.device)
+                optimizer.zero_grad()
+                outputs = self.model(inputs)
+                loss = hifi_custom_loss(self.classifier_name, self.model, inputs, outputs,
+                                        labels, indices_sensitive_attributes, self.eta)
+                loss.backward()
+                optimizer.step()
+                epoch_loss += loss.item()
+            scheduler.step()
+            avg_epoch_loss = epoch_loss / len(data_loader)
+            if verbose:
+                print(f'Epoch {epoch + 1}/{self.num_epochs}, Loss: {avg_epoch_loss:.4f}')
+            if abs(previous_loss - avg_epoch_loss) < self.tolerance:
+                if verbose:
+                    print(f'Training converged at epoch {epoch + 1}')
+                break
+            previous_loss = avg_epoch_loss
+
+        return self
+
+    def predict_proba(self, X):
+        self.model.eval()
+        with torch.no_grad():
+            X_tensor = torch.from_numpy(X).float().to(self.device)
+            outputs = self.model(X_tensor)
+            if self.classifier_name == 'svm':
+                outputs = torch.sigmoid(outputs)
+            favorable_probs = outputs.cpu().numpy().reshape(-1)
+        probs = np.zeros(shape=(X.shape[0], 2))
+        probs[:, 0] = 1.0 - favorable_probs
+        probs[:, 1] = favorable_probs
+        return probs
+
+    def predict(self, X):
+        probs = self.predict_proba(X)
+        return np.argmax(probs, axis=1)
+
 
 class FeaturewiseRegularizer(Regularizer):
     def __init__(self, lambdas, l2):
