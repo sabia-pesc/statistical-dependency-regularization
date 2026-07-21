@@ -250,7 +250,7 @@ def ftl_mlp_xi_reg_initializer(sens_attr, unprivileged_groups, privileged_groups
                                       batch_size=64)
     return model
 
-def simple_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+def simple_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None, fixed_lambda=None):
     hidden_sizes = [100, 100]
     corr_type = None
     l2 = 0.0
@@ -273,7 +273,7 @@ def simple_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hy
                         batch_size=64)
     return model
 
-def ftl_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+def ftl_mlp_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None, fixed_lambda=None):
     hidden_sizes = [100,100]
     corr_type = None
     l2 = 0.0
@@ -353,17 +353,17 @@ def hifi_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperpar
     return model
 
 datasets = [
-    adult_dataset_reader,
-    #bank_dataset_reader,
+    #adult_dataset_reader,
+    bank_dataset_reader,
     #compas_dataset_reader,
-    #erman_dataset_reader
+    #german_dataset_reader
 ]
 
 methods = [
-    #ftl_mlp_xi_reg_initializer,
-    #mlp_xi_reg_initializer
+    ftl_mlp_xi_reg_initializer,
     #simple_mlp_initializer,
-    #ftl_mlp_initializer,
+    #mlp_xi_reg_initializer,
+    #ftl_mlp_initializer
     hifi_initializer
 ]
 
