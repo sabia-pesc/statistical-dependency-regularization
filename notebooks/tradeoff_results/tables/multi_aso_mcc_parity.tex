@@ -1,0 +1,30 @@
+\begin{tabular}{lllll}
+\toprule
+Dataset & Method & ε(Xi→Method) & ε(Method→Xi) & Result \\
+\midrule
+Adult Income & MLP & 0.778 & 1.000 & tie \\
+Adult Income & MLP+L2 & 0.692 & 1.000 & tie \\
+Adult Income & MLP+L2^{(1)} & 1.000 & 0.174 & significantly_worse \\
+Adult Income & MLP+SDR$_{\rho}$ & 1.000 & 0.314 & worse \\
+Adult Income & MLP+SDR$_{\rho_s}$ & 0.611 & 1.000 & tie \\
+Adult Income & MLP+SDR$_{\tau}$ & 0.650 & 1.000 & tie \\
+Bank Marketing & MLP & 1.000 & 1.000 & tie \\
+Bank Marketing & MLP+L2 & 0.466 & 1.000 & better \\
+Bank Marketing & MLP+L2^{(1)} & 0.009 & 0.999 & significantly_better \\
+Bank Marketing & MLP+SDR$_{\rho}$ & 0.777 & 1.000 & tie \\
+Bank Marketing & MLP+SDR$_{\rho_s}$ & 0.771 & 1.000 & tie \\
+Bank Marketing & MLP+SDR$_{\tau}$ & 0.566 & 1.000 & tie \\
+Compas Recidivism & MLP & 0.014 & 1.000 & significantly_better \\
+Compas Recidivism & MLP+L2 & 0.165 & 1.000 & significantly_better \\
+Compas Recidivism & MLP+L2^{(1)} & 0.009 & 1.000 & significantly_better \\
+Compas Recidivism & MLP+SDR$_{\rho}$ & 0.199 & 1.000 & significantly_better \\
+Compas Recidivism & MLP+SDR$_{\rho_s}$ & 0.133 & 1.000 & significantly_better \\
+Compas Recidivism & MLP+SDR$_{\tau}$ & 0.103 & 1.000 & significantly_better \\
+German Credit & MLP & 1.000 & 0.548 & tie \\
+German Credit & MLP+L2 & 1.000 & 0.744 & tie \\
+German Credit & MLP+L2^{(1)} & 1.000 & 0.456 & worse \\
+German Credit & MLP+SDR$_{\rho}$ & 1.000 & 0.660 & tie \\
+German Credit & MLP+SDR$_{\rho_s}$ & 0.259 & 1.000 & better \\
+German Credit & MLP+SDR$_{\tau}$ & 1.000 & 0.733 & tie \\
+\bottomrule
+\end{tabular}

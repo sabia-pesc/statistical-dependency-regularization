@@ -1,0 +1,866 @@
+[
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "mcc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.7780024919499154,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.6922113953693225,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.17395808151093572,
+        "interpretation": "significantly_worse"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.3138490092217521,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.6108678000411949,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.6495385013229181,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "mcc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.3090715001518303,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.2707823847400253,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.2777895880889143,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.24884772040298977,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.6149419413303358,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.45341084281810456,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      }
+    }
+  },
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "mcc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.06588635628824455,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.025245533067794135,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.21978723149639862,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.22579881372052663,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.4391393030608141,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.3149714191671189,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      }
+    }
+  },
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "acc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.7608129844188155,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.3470881768663243,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.3995824777590668,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.27894004701249037,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.45806287486231995,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.39963070872646006,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      }
+    }
+  },
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "acc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.7297557285825486,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.9735693762889247,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.6735712865026561,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.5380449233101531,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.6488817145022745,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Adult Income",
+    "fitness_rule": "acc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.337574187370751,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.35053800550412767,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.2146177963748135,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.2309046239481898,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.14892650183260114,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "mcc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.46565085861507777,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.008867654816460152,
+        "eps_backward": 0.9989478501483411,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.7765383158783518,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.7709605323681067,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.5658726334889776,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "mcc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.907132622383443,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.5561120270555087,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.9073184505438654,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.38049707862959425,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.6594540869414809,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.9441225131334717,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "mcc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.4738504392244858,
+        "interpretation": "worse"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.44755823646622467,
+        "interpretation": "worse"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.26277708842761544,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.7979947406233984,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.29609908842949306,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.5514872774754153,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "acc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.20334206102135263,
+        "interpretation": "worse"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.314506372455499,
+        "interpretation": "worse"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.005015458339704056,
+        "eps_backward": 0.9995228405160889,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.18350126079927537,
+        "interpretation": "significantly_worse"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.4832546551738763,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.2975746424367033,
+        "interpretation": "worse"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "acc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.20616132715984198,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.15949640179822178,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.01007764149333378,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.22582824322156383,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.5173496685074176,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.5759627582123875,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Bank Marketing",
+    "fitness_rule": "acc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.3658502993003569,
+        "interpretation": "worse"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.5815577177865932,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.3795666609038193,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.8315214460535019,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.7401000522515032,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.6571223240059206,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "mcc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.014344680488467923,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.1653841435867904,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.009389789016732281,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.19897193099765229,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.1332867237813843,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.10306399288269155,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "mcc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.01229939208085255,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.05804771685517114,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.11227726126029146,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.15044141246146567,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.15941208635006882,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.020229958237579004,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "mcc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.23540213888534517,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.2414527971968881,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.6856674787064697,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.6086875243047948,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.35268303183635347,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.904395471075886,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "acc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.41585725905118504,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.590098126656764,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.10621399568068778,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.4814804779845314,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.8514320268802056,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.7248716442279619,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "acc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.062323199677949706,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.41296073357954843,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.2183393211649652,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.22678717500921808,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.34748236488587264,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.14359146437908193,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      }
+    }
+  },
+  {
+    "dataset": "Compas Recidivism",
+    "fitness_rule": "acc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.018745353715450015,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.033658013809900036,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.1176941055729534,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.038952122090390603,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.054099584305482895,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 0.16948076174072763,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "mcc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.5478012017922098,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.7442922979635337,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.45601596539000777,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.6595752345789937,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.2585024515711361,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.733498962882424,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "mcc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.7516461498603214,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.6144134225882816,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.7058039473607589,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.37793828155538356,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.24124883028732655,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.8287376899298038,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "mcc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.6375624329143985,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.7148203060899502,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.8865100622696384,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.5233431960013606,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "acc_parity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.9178752123586951,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.5306254847212156,
+        "interpretation": "tie"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.3410461054214826,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.2807551944262079,
+        "interpretation": "worse"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.7243208124434071,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.5084174224779383,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "acc_opportunity",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.27906992969395894,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+L2": {
+        "eps_forward": 0.10238350633157837,
+        "eps_backward": 1.0,
+        "interpretation": "significantly_better"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 0.7095624887935835,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 0.514347705355626,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 0.21149331225096524,
+        "eps_backward": 1.0,
+        "interpretation": "better"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      }
+    }
+  },
+  {
+    "dataset": "German Credit",
+    "fitness_rule": "acc_odds",
+    "comparisons": {
+      "MLP": {
+        "eps_forward": 0.6172458630977249,
+        "eps_backward": 1.0,
+        "interpretation": "tie"
+      },
+      "MLP+L2": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.2726031674027444,
+        "interpretation": "worse"
+      },
+      "MLP+L2^{(1)}": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.9243149858372399,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.9888838976276573,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\rho_s}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.6826023344665038,
+        "interpretation": "tie"
+      },
+      "MLP+SDR$_{\\tau}$": {
+        "eps_forward": 1.0,
+        "eps_backward": 0.8841405814972294,
+        "interpretation": "tie"
+      }
+    }
+  }
+]
