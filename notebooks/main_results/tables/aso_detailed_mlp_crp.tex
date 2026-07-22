@@ -1,0 +1,14 @@
+\begin{tabular}{lllllllllllll}
+\toprule
+ & \multicolumn{3}{r}{Adult Income} & \multicolumn{3}{r}{Bank Marketing} & \multicolumn{3}{r}{Compas Recidivism} & \multicolumn{3}{r}{German Credit} \\
+ & Forward & Backward & Interpretation & Forward & Backward & Interpretation & Forward & Backward & Interpretation & Forward & Backward & Interpretation \\
+fitness_rule &  &  &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+mcc_parity & 0.773 & 1.000 & tie & 0.981 & 1.000 & tie & 0.007 & 1.000 & significantly_better & 1.000 & 0.529 & tie \\
+mcc_opportunity & 0.275 & 1.000 & better & 1.000 & 0.903 & tie & 0.008 & 1.000 & significantly_better & 1.000 & 0.745 & tie \\
+mcc_odds & 0.057 & 1.000 & significantly_better & 1.000 & 0.461 & worse & 0.201 & 1.000 & better & 1.000 & 0.631 & tie \\
+acc_parity & 0.734 & 1.000 & tie & 1.000 & 0.185 & significantly_worse & 0.424 & 1.000 & better & 0.854 & 1.000 & tie \\
+acc_opportunity & 1.000 & 1.000 & tie & 0.184 & 1.000 & significantly_better & 0.057 & 1.000 & significantly_better & 0.245 & 1.000 & better \\
+acc_odds & 0.341 & 1.000 & better & 1.000 & 0.360 & worse & 0.007 & 1.000 & significantly_better & 0.630 & 1.000 & tie \\
+\bottomrule
+\end{tabular}
