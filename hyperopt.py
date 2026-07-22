@@ -522,6 +522,30 @@ def mlp_standard_l2_initializer(sens_attr, unprivileged_groups, privileged_group
                           batch_size=64)
     return model
 
+def mlp_featurewise_l2_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
+    hidden_sizes = [100, 100]
+    corr_type = 'featurewise_l2'
+    if type(hyperparameters) is not dict:
+        l2 = hyperparameters.suggest_categorical('l2', [1e-2, 1e-3, 1e-4])
+        dropout = hyperparameters.suggest_float('dropout', 0.0, 0.2)
+    else:
+        l2 = hyperparameters['l2']
+        dropout = hyperparameters['dropout']
+    if hyperparameters is not None:
+
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                          hidden_sizes=hidden_sizes,
+                          dropout=dropout,
+                          batch_size=64,
+                          corr_type=corr_type,
+                          l2=l2)
+    else:
+        model = SimpleMLP(sensitive_attr=sens_attr,
+                          hidden_sizes=[32],
+                          dropout=0.1,
+                          batch_size=64)
+    return model
+
 def mlp_sreg_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperparameters=None, fitness_rule=None):
     hidden_sizes = [100, 100]
     corr_type = 'spearman'
@@ -722,9 +746,10 @@ methods = [
     #mlp_preg_initializer,
     #mlp_sreg_initializer
     #mlp_kreg_initializer,
-    #mlp_standard_l2_initializer
+    #mlp_standard_l2_initializer,
+    mlp_featurewise_l2_initializer,
     #mlp_xi_reg_initializer
-    hifi_initializer
+    #hifi_initializer
 ]
 
 def main():

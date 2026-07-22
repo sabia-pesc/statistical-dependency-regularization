@@ -128,7 +128,7 @@ class SimpleMLP(Transformer):
         K.clear_session()
         self.model = Sequential()
         self.model.add(InputLayer(input_shape=self.input_shape))
-        if self.corr is not None and self.corr != 'standard_l2':
+        if self.corr is not None and self.corr != 'standard_l2' and self.corr != 'featurewise_l2':
             regularizer = FeaturewiseRegularizer(l2=self.l2, lambdas=self.corr)
             for i, hidden_size in enumerate(self.hidden_sizes):
                 if i == 0:
@@ -145,6 +145,15 @@ class SimpleMLP(Transformer):
                                          kernel_regularizer=regularizer))
                 else:
                     self.model.add(Dense(hidden_size, activation='relu'), kernel_regularizer=regularizer)
+                    self.model.add(Dropout(self.dropout))
+        elif self.corr == 'featurewise_l2':
+            regularizer = L2(self.l2)
+            for i, hidden_size in enumerate(self.hidden_sizes):
+                if i == 0:
+                    self.model.add(Dense(units=hidden_size, activation='relu',
+                                         kernel_regularizer=regularizer))
+                else:
+                    self.model.add(Dense(hidden_size, activation='relu'))
                     self.model.add(Dropout(self.dropout))
         else:
             for i, hidden_size in enumerate(self.hidden_sizes):
