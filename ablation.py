@@ -353,17 +353,17 @@ def hifi_initializer(sens_attr, unprivileged_groups, privileged_groups, hyperpar
     return model
 
 datasets = [
-    #adult_dataset_reader,
+    adult_dataset_reader,
     bank_dataset_reader,
-    #compas_dataset_reader,
-    #german_dataset_reader
+    compas_dataset_reader,
+    german_dataset_reader
 ]
 
 methods = [
     ftl_mlp_xi_reg_initializer,
-    #simple_mlp_initializer,
-    #mlp_xi_reg_initializer,
-    #ftl_mlp_initializer
+    simple_mlp_initializer,
+    mlp_xi_reg_initializer,
+    ftl_mlp_initializer,
     hifi_initializer
 ]
 
