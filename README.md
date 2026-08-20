@@ -1,6 +1,31 @@
 # Statistical Dependency Regularization
 
-Complete experimental source code and results for the paper "On the redlining effect and regularization approaches for fair classification", submitted to Expert Systems with Applications.
+Complete experimental source code and results for the paper "On the redlining effect and regularization approaches for fair classification".
+
+Ygor Canalli, Leandro Alvim, Filipe Braida, Geraldo Zimbrão,
+On the redlining effect and regularization approaches for fair classification,
+Expert Systems with Applications,
+2026,
+134070,
+ISSN 0957-4174,
+https://doi.org/10.1016/j.eswa.2026.134070.
+
+How to Cite
+
+```
+@article{CANALLI2026134070,
+title = {On the redlining effect and regularization approaches for fair classification},
+journal = {Expert Systems with Applications},
+pages = {134070},
+year = {2026},
+issn = {0957-4174},
+doi = {https://doi.org/10.1016/j.eswa.2026.134070},
+url = {https://www.sciencedirect.com/science/article/pii/S0957417426029763},
+author = {Ygor Canalli and Leandro Alvim and Filipe Braida and Geraldo Zimbrão},
+keywords = {Fairness, Fair Machine Learning, Redlining effect, Regularization, Correlation Coefficients},
+abstract = {Ensuring fairness in machine learning models is a fundamental challenge, particularly because of the redlining effect, in which proxy variables highly correlated with sensitive attributes unintentionally reproduce bias. Neural Network fairness-aware strategies often fail to explicitly penalize such correlations, applying dropout on hidden layers, which proves insufficient for controlling proxy discrimination. This study introduces the Statistical Dependency Regularization (SDR), a novel in-processing regularization approach for Multi-Layer Perceptrons (MLPs) that penalizes input-layer weights proportionally to the correlation between features and sensitive attributes. Dependence is primarily quantified through Chatterjee’s correlation coefficient, which is robust to noise and capable of capturing complex, nonlinear, and non-monotonic relationships. Comprehensive experiments, including ablation studies, across four widely adopted fairness benchmarks, optimizing six combined objectives involving multiple predictive performance with widely adopted fairness metrics, under hyperparameter search and resampling evaluations, compared through a suitable significance test, indicate that SDR effecively mitigates redlning effect, producing competitive results on multiple scenarios. Hence, by directly penalizing proxy effects, SDR provides a principled and effective contribution to fairness-aware neural networks, showing substantial potential for real-world deployment in sensitive decision-making systems. We also provide a theoretical analysis to support the intuition behind the proposed approach, showing how the SDR progressively reduces the model’s reliance on features correlated with the sensitive attribute and, in the limit, the predictor satisfies statistical parity under joint-independence assumption.}
+}%
+```
 
 ## Index Terms
 
@@ -12,12 +37,7 @@ Complete experimental source code and results for the paper "On the redlining ef
 
 ## Abstract
 
-Ensuring fairness in machine learning models is a fundamental challenge, particularly because of the redlining effect, in which proxy variables highly correlated with sensitive attributes unintentionally reproduce bias. Neural Network fairness-aware strategies often fail to explicitly penalize such correlations, applying dropout on hidden layers, which proves insufficient for controlling proxy discrimination.
-This study introduces the Statistical Dependency Regularization (SDR), a novel in-processing regularization approach for Multi-Layer Perceptrons (MLPs) that penalizes input-layer weights proportionally to the correlation between features and sensitive attributes. 
-Dependence is primarily quantified through Chatterjee’s correlation coefficient, which is robust to noise and capable of capturing complex, nonlinear, and non-monotonic relationships. 
-The SDR was evaluated across four widely adopted fairness benchmarks (Adult Income, German Credit, Bank Marketing, and COMPAS Recidivism), optimizing six combined objectives involving Accuracy or the Matthews Correlation Coefficient with widely adopted fairness metrics (Statistical Parity, Equal Opportunity, and Equalized Odds). Experiments across multiple benchmark datasets and objective metrics, including hyperparameter search and resampling evaluations, indicate that SDR consistently outperforms MLPs guided by cross-entropy loss with conventional L2 regularization, and correlation alternatives (Pearson’s, Spearman’s, and Kendall’s). 
-Moreover, SDR presents competitive results on fair classification problems, particularly excelling on COMPAS, the dataset with the strongest redlining bias.
-Hence, by directly penalizing proxy effects, SDR provides a principled and effective contribution to fairness-aware neural networks, showing substantial potential for real-world deployment in sensitive decision-making systems.
+Ensuring fairness in machine learning models is a fundamental challenge, particularly because of the redlining effect, in which proxy variables highly correlated with sensitive attributes unintentionally reproduce bias. Neural Network fairness-aware strategies often fail to explicitly penalize such correlations, applying dropout on hidden layers, which proves insufficient for controlling proxy discrimination. This study introduces the Statistical Dependency Regularization (SDR), a novel in-processing regularization approach for Multi-Layer Perceptrons (MLPs) that penalizes input-layer weights proportionally to the correlation between features and sensitive attributes. Dependence is primarily quantified through Chatterjee’s correlation coefficient, which is robust to noise and capable of capturing complex, nonlinear, and non-monotonic relationships. Comprehensive experiments, including ablation studies, across four widely adopted fairness benchmarks, optimizing six combined objectives involving multiple predictive performance with widely adopted fairness metrics, under hyperparameter search and resampling evaluations, compared through a suitable significance test, indicate that SDR effecively mitigates redlning effect, producing competitive results on multiple scenarios. Hence, by directly penalizing proxy effects, SDR provides a principled and effective contribution to fairness-aware neural networks, showing substantial potential for real-world deployment in sensitive decision-making systems. We also provide a theoretical analysis to support the intuition behind the proposed approach, showing how the SDR progressively reduces the model’s reliance on features correlated with the sensitive attribute and, in the limit, the predictor satisfies statistical parity under joint-independence assumption.
 ## Installation
 
 ### Prerequisites
@@ -58,6 +78,8 @@ Hence, by directly penalizing proxy effects, SDR provides a principled and effec
 - **xicorrelation 0.3.0**: Chatterjee's correlation coefficient
 - **Optuna 3.5.0**: Hyperparameter optimization
 - **Ray 2.8.1**: Distributed computing
+
+The HIFI repository (`HIFI-master` folder) is cloned from the original work at https://github.com/LingfengZhang98/HIFI, in order to ensure reproducibility.
 
 ## Usage
 
